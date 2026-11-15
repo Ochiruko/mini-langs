@@ -26,8 +26,8 @@ library
         AstToSsa
         Mach
         SsaToMach
-        Arm
-        MachToArm
+        X64
+        MachToX64
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.20.2.0

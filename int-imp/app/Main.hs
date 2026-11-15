@@ -1,8 +1,8 @@
 module Main (main) where
 
-import qualified Arm
+import qualified X64
 import qualified AstToSsa
-import qualified MachToArm
+import qualified MachToX64
 import qualified Parser
 import qualified SsaToMach
 import qualified Ast.Tc as Tc
@@ -12,4 +12,4 @@ main =
   case Parser.parse "" >>= Tc.check of
     Left err -> putStrLn err
     Right ast ->
-      print (MachToArm.translate (SsaToMach.translate (AstToSsa.translate ast)) :: Arm.Program)
+      print (MachToX64.translate (SsaToMach.translate (AstToSsa.translate ast)) :: X64.Program)
