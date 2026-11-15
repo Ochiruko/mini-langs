@@ -18,7 +18,16 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  MyLib
+    exposed-modules:
+        Ast
+        Ast.Tc
+        Parser
+        Ssa
+        AstToSsa
+        Mach
+        SsaToMach
+        Arm
+        MachToArm
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.20.2.0
