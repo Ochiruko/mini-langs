@@ -42,13 +42,12 @@ form, `set`, or `return`:
     (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
 
-### `body`
+### `lambda`
 
-`(body s1 ... sn)` is a special form for a sequence of statements, for example
-`(body (set x y) (return x))`. It functions exactly like an argless lambda
-function.
+`(lambda () s1 ... sn)` is a special form for a sequence of statements, for
+example `(lambda () (set x y) (return x))`. It is an argless lambda function.
 
-In a `zero?` statement, `t` and `f` are `body` forms. In a `zero?` expression,
+In a `zero?` statement, `t` and `f` are `lambda` forms. In a `zero?` expression,
 they are expressions.
 
 ## Identifiers
@@ -88,5 +87,5 @@ discarded.
 
 ## Expressions
 
-An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a `body` form.
+An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a `lambda` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
