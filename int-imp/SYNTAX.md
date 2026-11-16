@@ -42,10 +42,6 @@ form, `set`, or `return`:
     (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
 
-`(body s1 ... sn)` is a special form that groups statements into one body:
-
-    (body (set x y) (return x))
-
 ### `body`
 
 `(body s1 ... sn)` is a special form for a sequence of statements, for example
