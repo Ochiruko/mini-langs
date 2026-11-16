@@ -30,9 +30,6 @@ passed as an argument or assigned.
     (fn fact (n acc)
         (return (zero? n acc (fact (sub n 1) (mul n acc)))))
 
-    (fn fact2 (n acc)
-        (zero? n (return acc) (return (fact2 (sub n 1) (mul n acc)))))
-
 ## Bodies
 
 A body is a sequence of statements. A statement is a function call, a `zero?`
@@ -44,6 +41,9 @@ form, `set`, or `return`:
     (set x (zero? p t f))        ; assign the result of a conditional
     (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
+
+In a `zero?` statement, `t` and `f` are bodies. In a `zero?` expression, they are
+expressions.
 
 ## Identifiers
 
