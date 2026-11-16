@@ -21,7 +21,8 @@ printed after the program runs.
 
 If a function contains any `return` statement, every path through its body must
 contain at least one `return` statement, including paths that are logically
-unreachable. A `return` may appear anywhere in the body.
+unreachable. A `return` may appear anywhere in the body, at any depth, including
+inside a `body` form. `return-block` does not count toward this rule.
 
 A function with no `return` statements evaluates to nothing. Nothing cannot be
 passed as an argument or assigned.
@@ -31,23 +32,26 @@ passed as an argument or assigned.
 
 ## Bodies
 
-A body is a sequence of statements. A statement is a function call, a `zero?`
-form, `set`, or `return`:
+A body is a sequence of statements. A statement is an expression, `set`,
+`return`, or `return-block`:
 
     (foo arg1 ... argn)          ; call
     (set x 100)                  ; assign a literal
     (set x (bar arg1 ... argn))  ; assign the result of a call
     (set x (zero? p t f))        ; assign the result of a conditional
-    (zero? p t f)                ; conditional as a statement
-    (return x)                   ; return a value
+    (zero? p t f)                ; expression as a statement
+    (return x)                   ; return from the function
+    (return-block x)             ; return from the enclosing body
 
 ### `body`
 
-`(body s1 ... sn)` is a special form for a sequence of statements, for example
-`(body (set x y) (return x))`.
+`(body s1 ... sn)` is a special form for a sequence of statements. It is an
+expression. `(return-block x)` ends the enclosing `body` and makes `x` its value.
+For example:
 
-In a `zero?` statement, `t` and `f` are `body` forms. In a `zero?` expression,
-they are expressions.
+    (set x (zero? p (body (set y 1) (return-block y)) 0))
+
+`return` inside a `body` exits the enclosing function, not the body.
 
 ## Identifiers
 
@@ -86,10 +90,9 @@ discarded.
 
 ## Expressions
 
-An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
+An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a `body` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
 
 ## Open questions
 
-- How are block-level returns (a `return` inside a `body`) distinguished from
-  function-level returns?
+- What is the value of a `body` that ends without a `return-block`?
