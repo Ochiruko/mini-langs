@@ -46,8 +46,14 @@ form, `set`, or `return`:
 
     (body (set x y) (return x))
 
-In a `zero?` statement, `t` and `f` are bodies. In a `zero?` expression, they are
-expressions.
+### `body`
+
+`(body s1 ... sn)` is a special form for a sequence of statements, for example
+`(body (set x y) (return x))`. It functions exactly like an argless lambda
+function.
+
+In a `zero?` statement, `t` and `f` are `body` forms. In a `zero?` expression,
+they are expressions.
 
 ## Identifiers
 
@@ -86,5 +92,5 @@ discarded.
 
 ## Expressions
 
-An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
+An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a `body` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
