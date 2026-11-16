@@ -1,7 +1,6 @@
 # int-imp syntax
 
 int-imp is a small imperative language with functions and a single type, the integer.
-Source is S-expressions, read by the sexp parser and Megaparsec.
 Arguments are passed by reference. Expressions nest freely.
 
 ## Program
@@ -20,10 +19,13 @@ printed after the program runs.
 
     (fn name (arg1 ... argn) body)
 
-A function returns with `(return x)`. Early return is allowed. Every path
-through a function must contain at least one `return`, so control never falls off
-the end of a body. Paths are created only by `zero?`, so `return` can also
-appear as the branch of a `zero?`:
+If a function contains any `return` statement, every path through its body must
+contain at least one `return` statement, including paths that are logically
+unreachable. A `return` may appear anywhere in the body. A path is a choice of
+branch at each `zero?` statement.
+
+A function with no `return` statements evaluates to nothing. Nothing cannot be
+passed as an argument or assigned.
 
     (fn fact (n acc)
         (return (zero? n acc (fact (sub n 1) (mul n acc)))))
@@ -33,24 +35,25 @@ appear as the branch of a `zero?`:
 
 ## Bodies
 
-A body is a sequence of statements:
+A body is a sequence of statements. A statement is a function call, a `zero?`
+form, `set`, or `return`:
 
     (foo arg1 ... argn)          ; call
     (set x 100)                  ; assign a literal
     (set x (bar arg1 ... argn))  ; assign the result of a call
     (set x (zero? p t f))        ; assign the result of a conditional
+    (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
 
 ## Identifiers
 
 Variable and function names may contain uppercase and lowercase letters, `'`,
 `?` and `_`. They may also contain digits and `-`, but neither can be the first
-character. So names and integer literals never overlap, and there are no
-negative literals: write `(sub 0 5)` for -5.
+character.
 
 ## Literals
 
-Integers are the only values. Literal forms:
+Integers are the only values. Literals may be negative, as in `-5`. Literal forms:
 
     0xN   hexadecimal
     0dN   decimal
@@ -66,15 +69,16 @@ call elimination is planned for later.
 
 ### `zero?`
 
-`(zero? p t f)` is a special form, not a function. It evaluates `p`, then
+`(zero? p t f)` is a special form, not a function. It evaluates `p` first, then
 evaluates and returns `t` if `p` is 0, otherwise evaluates and returns `f`. Only
 the chosen branch is evaluated, so recursion in a branch terminates.
 
 ## Literal arguments
 
 A literal may be a call argument, as in `(add x 1)`. Arguments are passed by
-reference, so the compiler passes a fresh temporary holding the literal. Any
-write the callee makes to it is discarded.
+reference, so the compiler passes a fresh temporary holding the literal. Once the
+call has finished evaluating, any write the callee made to the temporary is
+discarded.
 
 ## Expressions
 
