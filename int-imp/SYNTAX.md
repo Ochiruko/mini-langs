@@ -20,7 +20,8 @@ printed after the program runs.
 
     (fn name (arg1 ... argn) body)
 
-A function returns with `(return x)`, which may appear anywhere in its body.
+A function returns with `(return x)`, which must be the last statement of its
+body. There is no early return.
 
 ## Bodies
 
@@ -74,8 +75,4 @@ Call arguments and the operands of `zero?` may all be nested expressions.
 
 ## Open questions
 
-- With no statement-level branching, a `return` in the middle of a body makes
-  every later statement unreachable. Should `return` also be allowed inside a
-  `zero?` branch, as in `(zero? p (return 1) f)`, so that early return is
-  useful? That would make `return` an expression.
 - What does a function return if its body ends without `return`?
