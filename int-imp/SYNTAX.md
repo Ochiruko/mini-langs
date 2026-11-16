@@ -31,13 +31,23 @@ passed as an argument or assigned.
 
 ## Bodies
 
-A body is a sequence of statements. A statement is a function call, `set`, or `return`:
+A body is a sequence of statements. A statement is a function call, a `zero?`
+form, `set`, or `return`:
 
     (foo arg1 ... argn)          ; call
     (set x 100)                  ; assign a literal
     (set x (bar arg1 ... argn))  ; assign the result of a call
     (set x (zero? p t f))        ; assign the result of a conditional
+    (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
+
+### `body`
+
+`(body s1 ... sn)` is a special form for a sequence of statements, for example
+`(body (set x y) (return x))`.
+
+In a `zero?` statement, `t` and `f` are `body` forms. In a `zero?` expression,
+they are expressions.
 
 ## Identifiers
 
@@ -78,3 +88,8 @@ discarded.
 
 An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
+
+## Open questions
+
+- How are block-level returns (a `return` inside a `body`) distinguished from
+  function-level returns?
