@@ -23,6 +23,10 @@ printed after the program runs.
 A function returns with `(return x)`, which must be the last statement of its
 body. There is no early return.
 
+A function may omit `return`, but then it must never return: control must not
+fall off the end of its body. A function that returns control to its caller
+must end with `return`, even if it only mutates its arguments.
+
 ## Bodies
 
 A body is a sequence of statements:
@@ -75,4 +79,6 @@ Call arguments and the operands of `zero?` may all be nested expressions.
 
 ## Open questions
 
-- What does a function return if its body ends without `return`?
+- Never returning is undecidable in general, so what does the typechecker
+  enforce? A conservative rule: a function without `return` must end in a call to
+  a non-returning function (itself included, for a plain loop).
