@@ -18,7 +18,9 @@ printed after the program runs.
 
 ## Functions
 
-    (fn (arg1 ... argn) body)
+    (fn name (arg1 ... argn) body)
+
+A function returns with `(return x)`, the last statement of its body.
 
 ## Bodies
 
@@ -27,12 +29,15 @@ A body is a sequence of statements:
     (foo arg1 ... argn)          ; call
     (set x 100)                  ; assign a literal
     (set x (bar arg1 ... argn))  ; assign the result of a call
+    (set x (zero? p t f))        ; assign the result of a conditional
+    (return x)                   ; return a value
 
 ## Identifiers
 
-Variable and function names may contain uppercase and lowercase letters, `-`,
-`'`, `?`, `_` and digits. A name cannot start with a digit, so names and
-integer literals never overlap.
+Variable and function names may contain uppercase and lowercase letters, `'`,
+`?` and `_`. They may also contain digits and `-`, but neither can be the first
+character. So names and integer literals never overlap, and there are no
+negative literals: write `(sub 0 5)` for -5.
 
 ## Literals
 
@@ -47,19 +52,23 @@ Integers are the only values. Literal forms:
 
 Arithmetic (`add`, `mul`, ...) is provided by the prelude as ordinary functions.
 
-There are no conditionals or loops. Iteration is recursion, and tail call
-elimination is planned for later. Branching is done by the one lazy prelude
-function, `zero?`, since the arithmetic functions cannot express laziness.
+There are no conditional statements or loops. Iteration is recursion, and tail
+call elimination is planned for later.
+
+### `zero?`
+
+`(zero? p t f)` is a special form, not a function. It evaluates `p`, then
+evaluates and returns `t` if `p` is 0, otherwise evaluates and returns `f`. Only
+the chosen branch is evaluated, so recursion in a branch terminates.
 
 ## Open questions
 
-- How is a function named? `(fn (args) body)` has no name slot.
-- How does a function return a value, given `(set x (bar ...))`? A
-  by-reference argument plus a mutated variable, or an explicit return form?
-- What is the call form of `zero?`, and what are its lazy operands? A
-  by-reference int cannot stand for an unevaluated branch, so they must be
-  bodies or function names, which would make `zero?` a special form rather than
-  a function. Is that intended?
-- Are negative literals allowed (`-5`)? `-` is a legal identifier character.
-- Can a literal be an argument (`(add x 1)`)? With call-by-reference it needs an
-  implicit temporary.
+- `return` is always the last statement, since there is no statement-level
+  branching, so it cannot return early. It is equivalent to "the last value is
+  returned", just with explicit syntax. Is that what you want?
+- `t` and `f` in `zero?` are evaluated lazily, so they must be expressions
+  (names, literals, calls, nested `zero?`). Can ordinary call arguments also be
+  nested expressions, or only names and literals?
+- Can a literal be a call argument, as in `(add x 1)`? Arguments are passed by
+  reference, so the compiler would pass a fresh temporary holding 1, and any
+  write the callee makes to it would be discarded.
