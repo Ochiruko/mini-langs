@@ -53,6 +53,9 @@ For example:
 
 `return` inside a `body` exits the enclosing function, not the body.
 
+A `body` that ends without a `return-block` evaluates to nothing, like a function
+with no `return`.
+
 ## Identifiers
 
 Variable and function names may contain uppercase and lowercase letters, `'`,
@@ -92,7 +95,3 @@ discarded.
 
 An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a `body` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
-
-## Open questions
-
-- What is the value of a `body` that ends without a `return-block`?
