@@ -20,12 +20,16 @@ printed after the program runs.
 
     (fn name (arg1 ... argn) body)
 
-A function returns with `(return x)`, which must be the last statement of its
-body. There is no early return.
+A function returns with `(return x)`. Early return is allowed. Every path
+through a function must contain at least one `return`, so control never falls off
+the end of a body. Paths are created only by `zero?`, so `return` can also
+appear as the branch of a `zero?`:
 
-A function may omit `return`, but then it must never return: control must not
-fall off the end of its body. A function that returns control to its caller
-must end with `return`, even if it only mutates its arguments.
+    (fn fact (n acc)
+        (return (zero? n acc (fact (sub n 1) (mul n acc)))))
+
+    (fn fact2 (n acc)
+        (zero? n (return acc) (return (fact2 (sub n 1) (mul n acc)))))
 
 ## Bodies
 
@@ -79,6 +83,8 @@ Call arguments and the operands of `zero?` may all be nested expressions.
 
 ## Open questions
 
-- Never returning is undecidable in general, so what does the typechecker
-  enforce? A conservative rule: a function without `return` must end in a call to
-  a non-returning function (itself included, for a plain loop).
+- Can `zero?` be used as a bare statement, as in `fact2` above? If not, a branch
+  can never contain `return`, and the all-paths rule is trivial. I assumed it can,
+  which makes `return` an expression.
+- The all-paths rule replaces the earlier idea of functions that never return, so
+  an infinite loop must still contain a `return` on every path. Is that intended?
