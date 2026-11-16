@@ -21,8 +21,7 @@ printed after the program runs.
 
 If a function contains any `return` statement, every path through its body must
 contain at least one `return` statement, including paths that are logically
-unreachable. A `return` may appear anywhere in the body. A path is a choice of
-branch at each `zero?` statement.
+unreachable. A `return` may appear anywhere in the body.
 
 A function with no `return` statements evaluates to nothing. Nothing cannot be
 passed as an argument or assigned.
@@ -32,23 +31,13 @@ passed as an argument or assigned.
 
 ## Bodies
 
-A body is a sequence of statements. A statement is a function call, a `zero?`
-form, `set`, or `return`:
+A body is a sequence of statements. A statement is a function call, `set`, or `return`:
 
     (foo arg1 ... argn)          ; call
     (set x 100)                  ; assign a literal
     (set x (bar arg1 ... argn))  ; assign the result of a call
     (set x (zero? p t f))        ; assign the result of a conditional
-    (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
-
-### `lambda`
-
-`(lambda () s1 ... sn)` is a special form for a sequence of statements, for
-example `(lambda () (set x y) (return x))`. It is an argless lambda function.
-
-In a `zero?` statement, `t` and `f` are `lambda` forms. In a `zero?` expression,
-they are expressions.
 
 ## Identifiers
 
@@ -87,5 +76,5 @@ discarded.
 
 ## Expressions
 
-An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a `lambda` form.
+An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
