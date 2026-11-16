@@ -80,11 +80,3 @@ write the callee makes to it is discarded.
 
 An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
 Call arguments and the operands of `zero?` may all be nested expressions.
-
-## Open questions
-
-- Can `zero?` be used as a bare statement, as in `fact2` above? If not, a branch
-  can never contain `return`, and the all-paths rule is trivial. I assumed it can,
-  which makes `return` an expression.
-- The all-paths rule replaces the earlier idea of functions that never return, so
-  an infinite loop must still contain a `return` on every path. Is that intended?
