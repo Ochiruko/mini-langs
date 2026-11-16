@@ -61,6 +61,12 @@ call elimination is planned for later.
 evaluates and returns `t` if `p` is 0, otherwise evaluates and returns `f`. Only
 the chosen branch is evaluated, so recursion in a branch terminates.
 
+## Literal arguments
+
+A literal may be a call argument, as in `(add x 1)`. Arguments are passed by
+reference, so the compiler passes a fresh temporary holding the literal. Any
+write the callee makes to it is discarded.
+
 ## Open questions
 
 - `return` is always the last statement, since there is no statement-level
@@ -69,6 +75,3 @@ the chosen branch is evaluated, so recursion in a branch terminates.
 - `t` and `f` in `zero?` are evaluated lazily, so they must be expressions
   (names, literals, calls, nested `zero?`). Can ordinary call arguments also be
   nested expressions, or only names and literals?
-- Can a literal be a call argument, as in `(add x 1)`? Arguments are passed by
-  reference, so the compiler would pass a fresh temporary holding 1, and any
-  write the callee makes to it would be discarded.
