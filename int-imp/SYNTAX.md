@@ -2,7 +2,7 @@
 
 int-imp is a small imperative language with functions and a single type, the integer.
 Source is S-expressions, read by the sexp parser and Megaparsec.
-Arguments are passed by reference.
+Arguments are passed by reference. Expressions nest freely.
 
 ## Program
 
@@ -20,7 +20,7 @@ printed after the program runs.
 
     (fn name (arg1 ... argn) body)
 
-A function returns with `(return x)`, the last statement of its body.
+A function returns with `(return x)`, which may appear anywhere in its body.
 
 ## Bodies
 
@@ -67,11 +67,15 @@ A literal may be a call argument, as in `(add x 1)`. Arguments are passed by
 reference, so the compiler passes a fresh temporary holding the literal. Any
 write the callee makes to it is discarded.
 
+## Expressions
+
+An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
+Call arguments and the operands of `zero?` may all be nested expressions.
+
 ## Open questions
 
-- `return` is always the last statement, since there is no statement-level
-  branching, so it cannot return early. It is equivalent to "the last value is
-  returned", just with explicit syntax. Is that what you want?
-- `t` and `f` in `zero?` are evaluated lazily, so they must be expressions
-  (names, literals, calls, nested `zero?`). Can ordinary call arguments also be
-  nested expressions, or only names and literals?
+- With no statement-level branching, a `return` in the middle of a body makes
+  every later statement unreachable. Should `return` also be allowed inside a
+  `zero?` branch, as in `(zero? p (return 1) f)`, so that early return is
+  useful? That would make `return` an expression.
+- What does a function return if its body ends without `return`?
