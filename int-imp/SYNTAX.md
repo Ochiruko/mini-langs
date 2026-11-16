@@ -42,6 +42,10 @@ form, `set`, or `return`:
     (zero? p t f)                ; conditional as a statement
     (return x)                   ; return a value
 
+`(body s1 ... sn)` is a special form that groups statements into one body:
+
+    (body (set x y) (return x))
+
 In a `zero?` statement, `t` and `f` are bodies. In a `zero?` expression, they are
 expressions.
 
