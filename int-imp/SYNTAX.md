@@ -31,38 +31,31 @@ widest entry in the column. Hex digits are lowercase. A negative value has its
 A function with no `return` evaluates to nothing, which cannot be passed or
 assigned. If a function has any `return`, every path through it must contain one,
 including logically unreachable paths. A path is a choice of branch at each
-`zero?`. `return-block` does not count.
+`zero?`.
 
 `set` on an `out` variable assigns it. `set` on any other new name creates a local
 variable of the enclosing function.
 
 ## Statements
 
-A statement is an expression, `set`, `return`, or `return-block`:
+A statement is an expression, `set`, `return`, or a statement-position `zero?`:
 
     (foo arg1 ... argn)          ; call
     (set x 100)
     (set x (bar arg1 ... argn))
     (zero? p (t1 ... tn) (f1 ... fm))   ; branches are lists of statements
     (return x)                   ; exits the enclosing function, at any depth
-    (return-block x)             ; ends the enclosing `block` with value x
 
 ## Expressions
 
-An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a
-`block` form. Expressions nest.
+An expression is a name, a literal, a call `(f e1 ... en)`, or a `zero?` form.
+Expressions nest.
 
 `(zero? p t f)` is a special form. It evaluates `p` first, then evaluates `t` if
 `p` is 0, otherwise `f`. Only the chosen branch is evaluated. In expression
 position, `t` and `f` are expressions and the form has the chosen branch's value.
 In statement position, the form is `(zero? p (t1 ... tn) (f1 ... fm))`: each
 branch is a parenthesized list of statements, and the form has no value.
-
-`(block s1 ... sn)` is a sequence of statements. Its value is the `x` of its
-`return-block`, or nothing if it ends without one. It lets a `zero?` branch in
-expression position hold several statements.
-
-    (set x (zero? p (block (set y 1) (return-block y)) 0))
 
 ## Names and literals
 

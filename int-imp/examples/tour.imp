@@ -21,9 +21,8 @@
     ((return 0))
     ((return 1))))
 
-; block as an expression, with return-block
 (fn nonzero-or-1 (n)
-  (set r (zero? n 1 (block (set t (add n 0)) (return-block t))))
+  (set r (zero? n 1 n))
   (return r))
 
 (main
