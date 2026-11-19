@@ -27,11 +27,3 @@ Requires GHC 9.10 and cabal (`int-imp.cabal` pins `base ^>=4.20`).
 
 `cabal run int-imp` currently runs the placeholder pipeline on an empty program
 and prints `Program`.
-
-## Possible additions
-
-Neither is in the language yet, and either may be added later:
-
-- `block`: a form that groups statements into one expression, so a `zero?` branch
-  in expression position can run statements before producing its value.
-- Case expressions: a multi-way branch on an integer. No syntax has been designed.
