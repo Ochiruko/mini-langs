@@ -1,0 +1,42 @@
+; out variables, printed after main finishes
+(out result flag big)
+
+; no return: evaluates to nothing, mutates its argument by reference
+(fn bump' (x)
+  (set x (add x 1)))
+
+; assigns an out variable from a function
+(fn store-flag (v)
+  (set flag v))
+
+(fn fact (n acc)
+  (return (zero? n acc (fact (sub n 1) (mul n acc)))))
+
+(fn eq3? (n)
+  (return (zero? (sub n 3) 1 0)))
+
+; statement-level zero? with early returns
+(fn sign-or-zero (p)
+  (zero? p
+    ((return 0))
+    ((return 1))))
+
+(fn nonzero-or-1 (n)
+  (set r (zero? n 1 n))
+  (return r))
+
+(main
+  (set n 0x10)
+  (set m 0b101)
+  (set neg -0x5)
+  (set k -3)
+  (set e 7)
+  (set d 0d7)
+  (bump' n)
+  (bump' 5)
+  (set result (fact 5 1))
+  (set s (sign-or-zero neg))
+  (set q (eq3? 3))
+  (set u (nonzero-or-1 0))
+  (set big (mul (add n 1) (sub 0 e)))
+  (zero? m ((store-flag 0)) ((store-flag 1))))
