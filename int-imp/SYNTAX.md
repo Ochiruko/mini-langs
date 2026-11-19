@@ -3,6 +3,26 @@
 int-imp is an imperative language with functions and one type, the 32-bit signed
 integer. Arguments are passed by reference.
 
+## Variables and boxes
+
+Every variable (an `out` variable, a parameter or a local) is a box: a mutable
+cell holding one 32-bit signed integer. Expressions evaluate to plain integers,
+never to boxes.
+
+- A name used as an argument passes its box. The callee's parameter is that
+  same box, so the callee's writes are visible to the caller. Passing the same
+  name twice aliases the two parameters.
+- Any other argument is evaluated, stored in a fresh box, and that box is
+  passed. Writes the callee makes to it are discarded.
+- A name used anywhere else reads its box at that moment.
+- `set x e` evaluates `e` and copies the value into `x`'s box. It never rebinds
+  `x`, so `(set y x)` leaves `y` and `x` independent.
+- Boxes are only passed downward. A function cannot return or store a box, so
+  a box never outlives the call that created it.
+- Arguments are evaluated left to right. A name argument is not read, so a
+  later argument that writes to it is seen by the callee.
+- Arithmetic wraps modulo 2^32.
+
 A `;` starts a comment that runs to the end of the line.
 
 ## Program
@@ -14,10 +34,8 @@ A `;` starts a comment that runs to the end of the line.
 The `out` variables are the only globals. Any function, `main` included, may
 assign them. There are no modules.
 
-When `main` finishes, each `out` variable is printed on its own line, in `out`
-order, as `name: 0xhex, 0ddec`. Each line has three columns: `name:`, `0xhex,`
-and `0ddec`. The columns are separated by one space and left aligned, and every
-column except the last is padded to the width of its widest entry. Hex digits are
+All `out` variables start as 0. When `main` finishes, each is printed on its own
+line, in `out` order, as `name: 0xhex, 0ddec`, with single spaces. Hex digits are
 lowercase. A negative value has its `-` before the prefix, as in `-0x7e`.
 
 ## Functions
@@ -34,8 +52,9 @@ If a function contains any `return`, every path through it must contain a
 `return`, including paths that are logically unreachable. A path is a choice of
 branch at each statement-level `zero?`.
 
-`set x e` assigns `x` if `x` is an `out` variable, a parameter, or an existing
-local. Otherwise it creates a local variable `x` of the enclosing function.
+`set x e` copies the value of `e` into `x` if `x` is an `out` variable, a
+parameter, or an existing local. Otherwise it creates a local variable `x` of the
+enclosing function.
 
 ## Statements
 
@@ -61,26 +80,23 @@ The expression `zero?` evaluates `p` first. If `p` is 0 it evaluates `t` and
 takes its value, otherwise it does the same with `f`. The other branch is not
 evaluated.
 
-An argument that is not a name is passed as a fresh temporary. Writes the callee
-makes to it are discarded once the call finishes evaluating.
-
 ## Names and literals
 
 A name consists of the characters `A-Z`, `a-z`, `0-9`, `-`, `'`, `?` and `_`. Its
 first character is not a digit or `-`.
 
-A literal is `0xN`, `0dN`, `0bN`, or `N`, which is the same as `0dN`. Each form
-may be preceded by `-`: `-0x10`, `-5`.
+A literal is `0xN` or a decimal `N`. Either may be preceded by `-`: `-0x10`, `-5`.
+A literal outside the 32-bit range is a parse error.
 
 ## Prelude
 
-The prelude provides arithmetic functions, including `add`, `sub` and `mul`. Its
-full contents are not decided. There are no loops. Iteration is recursion, and
+The prelude provides `add`, `sub` and `mul`. There are no loops. Iteration is recursion, and
 tail call elimination is a goal.
 
 ## Not yet specified
 
-- Behavior on integer overflow and on literals outside the 32-bit range.
+- Reading a local on a path where it has not been assigned yet. The typechecker
+  will likely reject it.
 
 ## Possible additions
 

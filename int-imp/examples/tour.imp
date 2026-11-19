@@ -27,11 +27,11 @@
 
 (main
   (set n 0x10)
-  (set m 0b101)
+  (set m 5)
   (set neg -0x5)
   (set k -3)
   (set e 7)
-  (set d 0d7)
+  (set d 7)
   (bump' n)
   (bump' 5)
   (set result (fact 5 1))
