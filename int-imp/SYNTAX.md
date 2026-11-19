@@ -87,5 +87,4 @@ tail call elimination is a goal.
 - `block`: a sequence of statements usable as an expression, with `return-block`
   to give its value.
 - Case expressions.
-- `while`: a loop statement, which would make early `return` from inside a loop
-  possible. No syntax has been designed.
+- `while`, for early returns from loops.
