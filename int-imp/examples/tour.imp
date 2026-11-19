@@ -18,8 +18,8 @@
 ; statement-level zero? with early returns
 (fn sign-or-zero (p)
   (zero? p
-    (return 0)
-    (return 1)))
+    ((return 0))
+    ((return 1))))
 
 ; block as an expression, with return-block
 (fn nonzero-or-1 (n)
@@ -40,4 +40,4 @@
   (set q (eq3? 3))
   (set u (nonzero-or-1 0))
   (set big (mul (add n 1) (sub 0 e)))
-  (zero? m (store-flag 0) (store-flag 1)))
+  (zero? m ((store-flag 0)) ((store-flag 1))))

@@ -43,7 +43,7 @@ A statement is an expression, `set`, `return`, or `return-block`:
     (foo arg1 ... argn)          ; call
     (set x 100)
     (set x (bar arg1 ... argn))
-    (zero? p t f)                ; `t` and `f` are statements
+    (zero? p (t1 ... tn) (f1 ... fm))   ; branches are lists of statements
     (return x)                   ; exits the enclosing function, at any depth
     (return-block x)             ; ends the enclosing `block` with value x
 
@@ -55,11 +55,12 @@ An expression is a name, a literal, a call `(f e1 ... en)`, a `zero?` form, or a
 `(zero? p t f)` is a special form. It evaluates `p` first, then evaluates `t` if
 `p` is 0, otherwise `f`. Only the chosen branch is evaluated. In expression
 position, `t` and `f` are expressions and the form has the chosen branch's value.
-In statement position, `t` and `f` are statements and the form has no value.
+In statement position, the form is `(zero? p (t1 ... tn) (f1 ... fm))`: each
+branch is a parenthesized list of statements, and the form has no value.
 
 `(block s1 ... sn)` is a sequence of statements. Its value is the `x` of its
-`return-block`, or nothing if it ends without one. It lets a branch of `zero?`
-hold several statements.
+`return-block`, or nothing if it ends without one. It lets a `zero?` branch in
+expression position hold several statements.
 
     (set x (zero? p (block (set y 1) (return-block y)) 0))
 
