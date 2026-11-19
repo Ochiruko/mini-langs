@@ -1,7 +1,7 @@
 # int-imp syntax
 
-An imperative language with functions and one type, the integer. Arguments are
-passed by reference. `;` starts a comment that runs to the end of the line.
+An imperative language with functions and one type, the 32-bit signed integer.
+Arguments are passed by reference. `;` starts a comment that runs to the end of the line.
 
 ## Program
 
